@@ -5,6 +5,7 @@ import {Card, CardBody, CardHeader, CardTitle, Col, Row} from "reactstrap";
 import {MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
+import Swal from "sweetalert2";
 
 class Products extends React.Component {
     state = {
@@ -72,17 +73,30 @@ class Products extends React.Component {
     }
 
     async setProducts() {
-        const response = await axios.get(this.state.productsUrl);
-        if (!response.data.success) {
-            return;
-        }
+        try {
+            const response = await axios.get(this.state.productsUrl);
+            if (!response.data.success) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a> '+ response.data.message +' </a>'
+                });
 
-        this.setState({
-            productsTable: {
-                columns: this.state.productsTable.columns,
-                rows: response.data.data
+                this.setState({
+                    productsTable: {
+                        columns: this.state.productsTable.columns,
+                        rows: response.data.data
+                    }
+                });
             }
-        });
+        } catch (e) {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: e.message
+            });
+        }
     }
 }
 
