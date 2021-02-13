@@ -6,6 +6,7 @@ import {MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
 import Swal from "sweetalert2";
+import Functions from "../variables/functions";
 
 class Products extends React.Component {
     state = {
@@ -76,26 +77,28 @@ class Products extends React.Component {
         try {
             const response = await axios.get(this.state.productsUrl);
             if (!response.data.success) {
-                await Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: '<a> '+ response.data.message +' </a>'
-                });
-
-                this.setState({
-                    productsTable: {
-                        columns: this.state.productsTable.columns,
-                        rows: response.data.data
-                    }
-                });
+                Functions.errorSwalWithFooter('Something went wrong!', response.data.message);
+                return;
             }
-        } catch (e) {
-            await Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: e.message
+
+            this.setState({
+                productsTable: {
+                    columns: this.state.productsTable.columns,
+                    rows: response.data.data
+                }
             });
+        } catch (e) {
+            if (e.response) {
+                switch (e.response.status) {
+                    case 400:
+                    case 401:
+                    case 403:
+                    case 500:
+                        Functions.errorSwal(e.response.data.message); break;
+                }
+            } else {
+                Functions.errorSwal(e.message);
+            }
         }
     }
 }
