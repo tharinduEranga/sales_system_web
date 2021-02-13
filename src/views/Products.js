@@ -4,9 +4,11 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Row} from "reactstrap";
 import {MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
+import {SERVER_URL_DEV} from "../variables/constants";
 
 class Products extends React.Component {
     state = {
+        productsUrl: SERVER_URL_DEV.concat(`/product`),
         productsTable: {
             columns: [
                 {
@@ -52,7 +54,7 @@ class Products extends React.Component {
                         <Col xs={12}>
                             <Card>
                                 <CardHeader>
-                                    <CardTitle tag="h4">Simple Table</CardTitle>
+                                    <CardTitle tag="h4">Products</CardTitle>
                                 </CardHeader>
                                 <CardBody>
                                     <MDBDataTableV5 hover entriesOptions={[5, 20, 25]}
@@ -70,7 +72,7 @@ class Products extends React.Component {
     }
 
     async setProducts() {
-        const response = await axios.get('http://172.17.64.161:8080/api/v1/product');
+        const response = await axios.get(this.state.productsUrl);
         if (!response.data.success) {
             return;
         }
