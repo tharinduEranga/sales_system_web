@@ -35,10 +35,8 @@ class RegularTables extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div
-                    className="d-flex align-items-center justify-content-center"
-                    style={{height: "100vh"}}
-                >
+                <div className="d-flex align-items-center justify-content-center"
+                     style={{height: "100vh"}}>
                     <Button variant="primary" onClick={this.openModal}>
                         Launch demo modal
                     </Button>
@@ -47,7 +45,7 @@ class RegularTables extends React.Component {
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body >
+                    <Modal.Body>
                         <div className="container">
 
                             <Form>
@@ -78,7 +76,7 @@ class RegularTables extends React.Component {
                                             <label htmlFor="exampleInputEmail1">
                                                 Email address
                                             </label>
-                                            <Input placeholder="Email" type="email" />
+                                            <Input placeholder="Email" type="email"/>
                                         </FormGroup>
                                     </Col>
                                 </Row>
