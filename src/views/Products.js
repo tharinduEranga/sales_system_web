@@ -137,17 +137,16 @@ class Products extends React.Component {
                 }
             });
         } catch (e) {
-            if (e.response) {
-                switch (e.response.status) {
-                    case 400:
-                    case 401:
-                    case 403:
-                    case 500:
-                        Functions.errorSwal(e.response.data.message);
-                        break;
-                }
-            } else {
+            if (!e.response)
                 Functions.errorSwal(e.message);
+
+            switch (e.response.status) {
+                case 400:
+                case 401:
+                case 403:
+                case 500:
+                    Functions.errorSwal(e.response.data.message);
+                    break;
             }
         }
     }
@@ -158,9 +157,28 @@ class Products extends React.Component {
         this.setState({addProduct});
     }
 
-    addProduct = event => {
+    addProduct = async event => {
         event.preventDefault();
-        console.log(this.state.addProduct);
+        try {
+            const response = await axios.post(this.state.productsUrl, this.state.addProduct);
+            console.log(response);
+            if (response.data.success)
+                Functions.successSwal(response.data.message);
+             else
+                Functions.errorSwal(response.data.message);
+        } catch (e) {
+            if (!e.response)
+                Functions.errorSwal(e.message);
+
+            switch (e.response.status) {
+                case 400:
+                case 401:
+                case 403:
+                case 500:
+                    Functions.errorSwal(e.response.data.message);
+                    break;
+            }
+        }
     }
 }
 
