@@ -1,19 +1,22 @@
 import React from "react";
 
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
-import {Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, Input, Row} from "reactstrap";
+import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
-import Swal from "sweetalert2";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
+import InputText from "../variables/input";
 
 class Products extends React.Component {
     state = {
         productsUrl: SERVER_URL_DEV.concat(`/product`),
         addModalOpen: false,
         addProduct: {
+            name: ''
+        },
+        addProductErrors: {
             name: ''
         },
         productsTable: {
@@ -83,16 +86,14 @@ class Products extends React.Component {
                                                 <Form onSubmit={this.addProduct}>
                                                     <Row>
                                                         <Col className="pr-1" md="12">
-                                                            <FormGroup>
-                                                                <label>Product Name</label>
-                                                                <Input
-                                                                    placeholder="Enter Name"
-                                                                    type="text"
-                                                                    value={this.state.addProduct.name}
-                                                                    name="name"
-                                                                    onChange={this.handleAddFormChange}
-                                                                />
-                                                            </FormGroup>
+                                                            <InputText
+                                                                label="Product Name"
+                                                                id="name"
+                                                                name="name"
+                                                                error={this.state.addProductErrors.name}
+                                                                value={this.state.addProduct.name}
+                                                                onChange={this.handleAddFormChange}
+                                                            />
                                                         </Col>
                                                         <Col md="10">
                                                             <Button type="submit" variant="primary">Save</Button>
@@ -159,12 +160,16 @@ class Products extends React.Component {
 
     addProduct = async event => {
         event.preventDefault();
+        const addProductErrors = this.addFormErrors();
+        this.setState({addProductErrors})
+        if (Object.keys(addProductErrors).length > 0)
+            return;
+
         try {
             const response = await axios.post(this.state.productsUrl, this.state.addProduct);
-            console.log(response);
             if (response.data.success)
                 Functions.successSwal(response.data.message);
-             else
+            else
                 Functions.errorSwal(response.data.message);
         } catch (e) {
             if (!e.response)
@@ -180,6 +185,15 @@ class Products extends React.Component {
             }
         }
     }
+
+    addFormErrors = () => {
+        const errors = {};
+        const {addProduct} = this.state;
+        if (addProduct.name.trim() === '')
+            errors.name = 'Name is required!';
+        return errors;
+    }
+
 }
 
 
