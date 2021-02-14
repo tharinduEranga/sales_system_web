@@ -194,7 +194,8 @@ class Products extends React.Component {
     addFormErrors = () => {
         const errors = {};
         const {addProduct} = this.state;
-        let validate = Joi.validate(addProduct, this.addValidateSchema);
+        const options = { abortEarly: false };
+        let validate = Joi.validate(addProduct, this.addValidateSchema, options);
 
         if (!validate.error) return errors;
 
