@@ -8,6 +8,7 @@ import {SERVER_URL_DEV} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import InputText from "../variables/input";
+import Joi from "joi-browser";
 
 class Products extends React.Component {
     state = {
@@ -48,6 +49,10 @@ class Products extends React.Component {
             ],
             rows: []
         }
+    }
+
+    addValidateSchema = {
+        name: Joi.string().required()
     }
 
     openAddModal = () => this.setState({addModalOpen: true});
@@ -189,8 +194,12 @@ class Products extends React.Component {
     addFormErrors = () => {
         const errors = {};
         const {addProduct} = this.state;
-        if (addProduct.name.trim() === '')
-            errors.name = 'Name is required!';
+        let validate = Joi.validate(addProduct, this.addValidateSchema);
+
+        if (!validate.error) return errors;
+
+        for (const detail of validate.error.details)
+            errors[detail.path] = detail.message;
         return errors;
     }
 
