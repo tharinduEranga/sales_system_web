@@ -2,7 +2,7 @@ import React from "react";
 
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
-import {MDBDataTableV5} from 'mdbreact';
+import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
 import Functions from "../variables/functions";
@@ -46,6 +46,12 @@ class Products extends React.Component {
                     sort: 'asc',
                     width: 200
                 },
+                {
+                    label: 'Action',
+                    field: 'action',
+                    sort: 'asc',
+                    width: 200
+                }
             ],
             rows: []
         }
@@ -76,11 +82,11 @@ class Products extends React.Component {
                                 </CardHeader>
                                 <CardBody>
 
-                                    <div className="d-flex align-items-center justify-content-center"
-                                         style={{height: "10vh"}}>
-                                        <Button variant="primary" onClick={this.openAddModal}>
-                                            Add New
-                                        </Button>
+                                    <div className="container w-75">
+                                        <div className="d-flex align-items-end justify-content-end"
+                                             style={{height: "10vh"}}>
+                                            <Button variant="primary" onClick={this.openAddModal}>Add New</Button>
+                                        </div>
                                     </div>
                                     <Modal show={this.state.addModalOpen} onHide={this.closeAddModal}>
                                         <Modal.Header closeButton>
@@ -136,10 +142,22 @@ class Products extends React.Component {
                 return;
             }
 
+            const dataWithButton = response.data.data.map(data => {
+                data.action = <React.Fragment>
+                    <button className="btn btn-danger btn-sm w-20 ml-1" id={data.id}
+                            onClick={this.productDeleteClick}>Delete
+                    </button>
+                    <button className="btn btn-warning btn-sm w-20 ml-1" id={data.id}
+                            onClick={this.productUpdateClick}>Update
+                    </button>
+                </React.Fragment>
+                return data;
+            });
+
             this.setState({
                 productsTable: {
                     columns: this.state.productsTable.columns,
-                    rows: response.data.data
+                    rows: dataWithButton
                 }
             });
         } catch (e) {
@@ -194,7 +212,7 @@ class Products extends React.Component {
     addFormErrors = () => {
         const errors = {};
         const {addProduct} = this.state;
-        const options = { abortEarly: false };
+        const options = {abortEarly: false};
         let validate = Joi.validate(addProduct, this.addValidateSchema, options);
 
         if (!validate.error) return errors;
@@ -204,6 +222,13 @@ class Products extends React.Component {
         return errors;
     }
 
+    productDeleteClick = (event) => {
+        console.log(event.target.id);
+    }
+
+    productUpdateClick = (event) => {
+        console.log(event.target.id);
+    }
 }
 
 
