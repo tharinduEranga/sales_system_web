@@ -162,14 +162,14 @@ class Products extends React.Component {
                                                         <Col className="pr-1" md="12">
                                                             <InputSelect
                                                                 label="Product Status"
-                                                                id="status"
-                                                                name="status"
-                                                                error={this.state.updateProductErrors.status}
-                                                                value={this.state.updateProduct.status}
+                                                                id="statusId"
+                                                                name="statusId"
+                                                                error={this.state.updateProductErrors.statusId}
+                                                                value={this.state.updateProduct.statusId}
                                                                 onChange={this.handleUpdateFormChange}
                                                                 options={[
-                                                                    <option key={1}>Active</option>,
-                                                                    <option key={0}>Inactive</option>
+                                                                    <option key={1} value={1}>Active</option>,
+                                                                    <option key={0} value={0}>Inactive</option>
                                                                 ]}>
                                                             </InputSelect>
                                                         </Col>
@@ -267,6 +267,8 @@ class Products extends React.Component {
             const response = await axios.post(this.state.productsUrl, this.state.addProduct);
             if (response.data.success) {
                 Functions.successSwal(response.data.message);
+                this.closeAddModal();
+                this.setState({addProduct: {name: ''}});
                 await this.setProducts();
             } else
                 Functions.errorSwal(response.data.message);
@@ -298,6 +300,7 @@ class Products extends React.Component {
             const response = await axios.put(this.state.productsUrl, this.state.updateProduct);
             if (response.data.success) {
                 Functions.successSwal(response.data.message);
+                this.closeUpdateModal();
                 await this.setProducts();
             } else
                 Functions.errorSwal(response.data.message);
