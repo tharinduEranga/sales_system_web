@@ -19,15 +19,16 @@ class Products extends React.Component {
             name: ''
         },
         updateProduct: {
+            id: '',
             name: '',
-            status: 1
+            statusId: 1
         },
         addProductErrors: {
             name: ''
         },
         updateProductErrors: {
             name: '',
-            status: ''
+            statusId: ''
         },
         productsTable: {
             columns: [
@@ -63,11 +64,18 @@ class Products extends React.Component {
                 }
             ],
             rows: []
-        }
+        },
+        processing: false
     }
 
     addValidateSchema = {
         name: Joi.string().required()
+    }
+
+    updateValidateSchema = {
+        id: Joi.string().required(),
+        name: Joi.string().required(),
+        statusId: Joi.number().required()
     }
 
     openAddModal = () => this.setState({addModalOpen: true});
@@ -119,7 +127,8 @@ class Products extends React.Component {
                                                             />
                                                         </Col>
                                                         <Col md="10">
-                                                            <Button type="submit" variant="primary">Save</Button>
+                                                            <Button type="submit" variant="primary"
+                                                                    disabled={this.state.processing}>Save</Button>
                                                         </Col>
                                                     </Row>
                                                 </Form>
@@ -165,7 +174,8 @@ class Products extends React.Component {
                                                             </InputSelect>
                                                         </Col>
                                                         <Col md="10">
-                                                            <Button type="submit" variant="primary">Update</Button>
+                                                            <Button type="submit" variant="primary"
+                                                                    disabled={this.state.processing}>Update</Button>
                                                         </Col>
                                                     </Row>
                                                 </Form>
@@ -248,15 +258,17 @@ class Products extends React.Component {
     addProduct = async event => {
         event.preventDefault();
         const addProductErrors = this.addFormErrors();
-        this.setState({addProductErrors})
+        this.setState({addProductErrors});
         if (Object.keys(addProductErrors).length > 0)
             return;
 
+        this.setProcessing(true)
         try {
             const response = await axios.post(this.state.productsUrl, this.state.addProduct);
-            if (response.data.success)
+            if (response.data.success) {
                 Functions.successSwal(response.data.message);
-            else
+                await this.setProducts();
+            } else
                 Functions.errorSwal(response.data.message);
         } catch (e) {
             if (!e.response)
@@ -271,11 +283,38 @@ class Products extends React.Component {
                     break;
             }
         }
+        this.setProcessing(false);
     }
 
     updateProduct = async event => {
         event.preventDefault();
-        console.log(event);
+        const updateProductErrors = this.updateFormErrors();
+        this.setState({updateProductErrors});
+        if (Object.keys(updateProductErrors).length > 0)
+            return;
+
+        this.setProcessing(true);
+        try {
+            const response = await axios.put(this.state.productsUrl, this.state.updateProduct);
+            if (response.data.success) {
+                Functions.successSwal(response.data.message);
+                await this.setProducts();
+            } else
+                Functions.errorSwal(response.data.message);
+        } catch (e) {
+            if (!e.response)
+                Functions.errorSwal(e.message);
+
+            switch (e.response.status) {
+                case 400:
+                case 401:
+                case 403:
+                case 500:
+                    Functions.errorSwal(e.response.data.message);
+                    break;
+            }
+        }
+        this.setProcessing(false);
     }
 
     addFormErrors = () => {
@@ -291,13 +330,37 @@ class Products extends React.Component {
         return errors;
     }
 
+    updateFormErrors = () => {
+        const errors = {};
+        const {updateProduct} = this.state;
+        const options = {abortEarly: false};
+        let validate = Joi.validate(updateProduct, this.updateValidateSchema, options);
+
+        if (!validate.error) return errors;
+
+        for (const detail of validate.error.details)
+            errors[detail.path] = detail.message;
+        return errors;
+    }
+
     productDeleteClick = (event) => {
         console.log(JSON.parse(event.target.value));
     }
 
     productUpdateClick = (event) => {
-        console.log(JSON.parse(event.target.value));
+        const selected = JSON.parse(event.target.value);
+        this.setState({
+            updateProduct: {
+                id: selected.id,
+                name: selected.name,
+                statusId: selected.statusId
+            }
+        });
         this.openUpdateModal();
+    }
+
+    setProcessing = (processing) => {
+        this.setState({processing: processing});
     }
 }
 
