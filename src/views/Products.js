@@ -343,8 +343,33 @@ class Products extends React.Component {
         return errors;
     }
 
-    productDeleteClick = (event) => {
-        console.log(JSON.parse(event.target.value));
+    productDeleteClick = async (event) => {
+        const selected = JSON.parse(event.target.value);
+        event.preventDefault();
+
+        this.setProcessing(true)
+        try {
+            const response = await axios
+                .delete(this.state.productsUrl.concat('/').concat(selected.id));
+            if (response.data.success) {
+                Functions.successSwal(response.data.message);
+                await this.setProducts();
+            } else
+                Functions.errorSwal(response.data.message);
+        } catch (e) {
+            if (!e.response)
+                Functions.errorSwal(e.message);
+
+            switch (e.response.status) {
+                case 400:
+                case 401:
+                case 403:
+                case 500:
+                    Functions.errorSwal(e.response.data.message);
+                    break;
+            }
+        }
+        this.setProcessing(false);
     }
 
     productUpdateClick = (event) => {
