@@ -257,9 +257,9 @@ class Products extends React.Component {
                 this.setState({addProduct: {name: ''}});
                 await this.setProducts();
             }
-        } catch (e) {
-            this.setProcessing(false);
-        }
+        } catch (e) {}
+
+        this.setProcessing(false);
     }
 
     updateProduct = async event => {
@@ -278,9 +278,9 @@ class Products extends React.Component {
                 this.closeUpdateModal();
                 await this.setProducts();
             }
-        } catch (e) {
-            this.setProcessing(false);
-        }
+        } catch (e) {}
+
+        this.setProcessing(false);
     }
 
     addFormErrors = () => {
@@ -310,8 +310,14 @@ class Products extends React.Component {
     }
 
     productDeleteClick = async (event) => {
+
         const selected = JSON.parse(event.target.value);
         event.preventDefault();
+
+        const confirm = await Functions.confirmSwal('Yes, delete it!');
+
+        if (!confirm.isConfirmed)
+            return;
 
         this.setProcessing(true)
 
@@ -322,9 +328,8 @@ class Products extends React.Component {
                 Functions.successSwal(response.data.message);
                 await this.setProducts();
             }
-        } catch (e) {
-            this.setProcessing(false);
-        }
+        } catch (e) {}
+        this.setProcessing(false);
     }
 
     productUpdateClick = (event) => {
