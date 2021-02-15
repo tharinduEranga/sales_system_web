@@ -10,6 +10,25 @@ import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect} from "../variables/input";
 import Joi from "joi-browser";
 
+axios.interceptors.response.use(response => {
+    if (response.data && !response.data.success) {
+        Functions.errorSwal(response.data.message);
+    }
+    return Promise.resolve(response);
+}, error => {
+    if (!error.response)
+        Functions.errorSwal(error.message);
+    switch (error.response.status) {
+        case 400:
+        case 401:
+        case 403:
+        case 500:
+            Functions.errorSwal(error.response.data.message);
+            break;
+    }
+    return Promise.reject(error);
+});
+
 class Products extends React.Component {
     state = {
         productsUrl: SERVER_URL_DEV.concat(`/product`),
@@ -203,44 +222,27 @@ class Products extends React.Component {
     }
 
     async setProducts() {
-        try {
-            const response = await axios.get(this.state.productsUrl);
-            if (!response.data.success) {
-                Functions.errorSwalWithFooter('Something went wrong!', response.data.message);
-                return;
+
+        const response = await axios.get(this.state.productsUrl);
+
+        const dataWithButton = response.data.data.map(data => {
+            data.action = <React.Fragment>
+                <button className="btn btn-danger btn-sm w-20 ml-1" value={JSON.stringify(data)}
+                        onClick={this.productDeleteClick}>Delete
+                </button>
+                <button className="btn btn-warning btn-sm w-20 ml-1" value={JSON.stringify(data)}
+                        onClick={this.productUpdateClick}>Update
+                </button>
+            </React.Fragment>
+            return data;
+        });
+
+        this.setState({
+            productsTable: {
+                columns: this.state.productsTable.columns,
+                rows: dataWithButton
             }
-
-            const dataWithButton = response.data.data.map(data => {
-                data.action = <React.Fragment>
-                    <button className="btn btn-danger btn-sm w-20 ml-1" value={JSON.stringify(data)}
-                            onClick={this.productDeleteClick}>Delete
-                    </button>
-                    <button className="btn btn-warning btn-sm w-20 ml-1" value={JSON.stringify(data)}
-                            onClick={this.productUpdateClick}>Update
-                    </button>
-                </React.Fragment>
-                return data;
-            });
-
-            this.setState({
-                productsTable: {
-                    columns: this.state.productsTable.columns,
-                    rows: dataWithButton
-                }
-            });
-        } catch (e) {
-            if (!e.response)
-                Functions.errorSwal(e.message);
-
-            switch (e.response.status) {
-                case 400:
-                case 401:
-                case 403:
-                case 500:
-                    Functions.errorSwal(e.response.data.message);
-                    break;
-            }
-        }
+        });
     }
 
     handleAddFormChange = ({currentTarget: input}) => {
@@ -262,7 +264,8 @@ class Products extends React.Component {
         if (Object.keys(addProductErrors).length > 0)
             return;
 
-        this.setProcessing(true)
+        this.setProcessing(true);
+
         try {
             const response = await axios.post(this.state.productsUrl, this.state.addProduct);
             if (response.data.success) {
@@ -270,22 +273,10 @@ class Products extends React.Component {
                 this.closeAddModal();
                 this.setState({addProduct: {name: ''}});
                 await this.setProducts();
-            } else
-                Functions.errorSwal(response.data.message);
-        } catch (e) {
-            if (!e.response)
-                Functions.errorSwal(e.message);
-
-            switch (e.response.status) {
-                case 400:
-                case 401:
-                case 403:
-                case 500:
-                    Functions.errorSwal(e.response.data.message);
-                    break;
             }
+        } catch (e) {
+            this.setProcessing(false);
         }
-        this.setProcessing(false);
     }
 
     updateProduct = async event => {
@@ -296,28 +287,17 @@ class Products extends React.Component {
             return;
 
         this.setProcessing(true);
+
         try {
             const response = await axios.put(this.state.productsUrl, this.state.updateProduct);
             if (response.data.success) {
                 Functions.successSwal(response.data.message);
                 this.closeUpdateModal();
                 await this.setProducts();
-            } else
-                Functions.errorSwal(response.data.message);
-        } catch (e) {
-            if (!e.response)
-                Functions.errorSwal(e.message);
-
-            switch (e.response.status) {
-                case 400:
-                case 401:
-                case 403:
-                case 500:
-                    Functions.errorSwal(e.response.data.message);
-                    break;
             }
+        } catch (e) {
+            this.setProcessing(false);
         }
-        this.setProcessing(false);
     }
 
     addFormErrors = () => {
@@ -351,28 +331,17 @@ class Products extends React.Component {
         event.preventDefault();
 
         this.setProcessing(true)
+
         try {
             const response = await axios
                 .delete(this.state.productsUrl.concat('/').concat(selected.id));
             if (response.data.success) {
                 Functions.successSwal(response.data.message);
                 await this.setProducts();
-            } else
-                Functions.errorSwal(response.data.message);
-        } catch (e) {
-            if (!e.response)
-                Functions.errorSwal(e.message);
-
-            switch (e.response.status) {
-                case 400:
-                case 401:
-                case 403:
-                case 500:
-                    Functions.errorSwal(e.response.data.message);
-                    break;
             }
+        } catch (e) {
+            this.setProcessing(false);
         }
-        this.setProcessing(false);
     }
 
     productUpdateClick = (event) => {
