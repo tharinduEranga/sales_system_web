@@ -29,6 +29,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import 'assets/css/custom/admin-global.css';
 
 var ps;
 

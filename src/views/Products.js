@@ -190,11 +190,13 @@ class Products extends React.Component {
                                         </Modal.Footer>
                                     </Modal>
 
-                                    <MDBDataTableV5 hover entriesOptions={[5, 20, 25]}
-                                                    entries={5}
-                                                    data={this.state.productsTable}
-                                                    fullPagination
-                                                    searchTop searchBottom={false}/>
+                                    <div className="container">
+                                        <MDBDataTableV5 hover entriesOptions={[5, 20, 25]}
+                                                        entries={5}
+                                                        data={this.state.productsTable}
+                                                        fullPagination
+                                                        searchTop searchBottom={false}/>
+                                    </div>
                                 </CardBody>
                             </Card>
                         </Col>
@@ -257,7 +259,8 @@ class Products extends React.Component {
                 this.setState({addProduct: {name: ''}});
                 await this.setProducts();
             }
-        } catch (e) {}
+        } catch (e) {
+        }
 
         this.setProcessing(false);
     }
@@ -278,7 +281,8 @@ class Products extends React.Component {
                 this.closeUpdateModal();
                 await this.setProducts();
             }
-        } catch (e) {}
+        } catch (e) {
+        }
 
         this.setProcessing(false);
     }
@@ -328,7 +332,8 @@ class Products extends React.Component {
                 Functions.successSwal(response.data.message);
                 await this.setProducts();
             }
-        } catch (e) {}
+        } catch (e) {
+        }
         this.setProcessing(false);
     }
 
