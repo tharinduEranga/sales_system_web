@@ -7,18 +7,27 @@ import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
-import InputText from "../variables/input";
+import {InputText, InputSelect} from "../variables/input";
 import Joi from "joi-browser";
 
 class Products extends React.Component {
     state = {
         productsUrl: SERVER_URL_DEV.concat(`/product`),
         addModalOpen: false,
+        updateModalOpen: false,
         addProduct: {
             name: ''
         },
+        updateProduct: {
+            name: '',
+            status: 1
+        },
         addProductErrors: {
             name: ''
+        },
+        updateProductErrors: {
+            name: '',
+            status: ''
         },
         productsTable: {
             columns: [
@@ -63,6 +72,9 @@ class Products extends React.Component {
 
     openAddModal = () => this.setState({addModalOpen: true});
     closeAddModal = () => this.setState({addModalOpen: false});
+
+    openUpdateModal = () => this.setState({updateModalOpen: true});
+    closeUpdateModal = () => this.setState({updateModalOpen: false});
 
     async componentDidMount() {
         return this.setProducts();
@@ -120,6 +132,52 @@ class Products extends React.Component {
                                         </Modal.Footer>
                                     </Modal>
 
+                                    <Modal show={this.state.updateModalOpen} onHide={this.closeUpdateModal}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Update Product Details</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <div className="container">
+                                                <Form onSubmit={this.updateProduct}>
+                                                    <Row>
+                                                        <Col className="pr-1" md="12">
+                                                            <InputText
+                                                                label="Product Name"
+                                                                id="name"
+                                                                name="name"
+                                                                error={this.state.updateProductErrors.name}
+                                                                value={this.state.updateProduct.name}
+                                                                onChange={this.handleUpdateFormChange}
+                                                            />
+                                                        </Col>
+                                                        <Col className="pr-1" md="12">
+                                                            <InputSelect
+                                                                label="Product Status"
+                                                                id="status"
+                                                                name="status"
+                                                                error={this.state.updateProductErrors.status}
+                                                                value={this.state.updateProduct.status}
+                                                                onChange={this.handleUpdateFormChange}
+                                                                options={[
+                                                                    <option key={1}>Active</option>,
+                                                                    <option key={0}>Inactive</option>
+                                                                ]}>
+                                                            </InputSelect>
+                                                        </Col>
+                                                        <Col md="10">
+                                                            <Button type="submit" variant="primary">Update</Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Form>
+                                            </div>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={this.closeUpdateModal}>
+                                                Close
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+
                                     <MDBDataTableV5 hover entriesOptions={[5, 20, 25]}
                                                     entries={5}
                                                     data={this.state.productsTable}
@@ -144,10 +202,10 @@ class Products extends React.Component {
 
             const dataWithButton = response.data.data.map(data => {
                 data.action = <React.Fragment>
-                    <button className="btn btn-danger btn-sm w-20 ml-1" id={data.id}
+                    <button className="btn btn-danger btn-sm w-20 ml-1" value={JSON.stringify(data)}
                             onClick={this.productDeleteClick}>Delete
                     </button>
-                    <button className="btn btn-warning btn-sm w-20 ml-1" id={data.id}
+                    <button className="btn btn-warning btn-sm w-20 ml-1" value={JSON.stringify(data)}
                             onClick={this.productUpdateClick}>Update
                     </button>
                 </React.Fragment>
@@ -181,6 +239,12 @@ class Products extends React.Component {
         this.setState({addProduct});
     }
 
+    handleUpdateFormChange = ({currentTarget: input}) => {
+        const updateProduct = {...this.state.updateProduct};
+        updateProduct[input.name] = input.value;
+        this.setState({updateProduct});
+    }
+
     addProduct = async event => {
         event.preventDefault();
         const addProductErrors = this.addFormErrors();
@@ -209,6 +273,11 @@ class Products extends React.Component {
         }
     }
 
+    updateProduct = async event => {
+        event.preventDefault();
+        console.log(event);
+    }
+
     addFormErrors = () => {
         const errors = {};
         const {addProduct} = this.state;
@@ -223,11 +292,12 @@ class Products extends React.Component {
     }
 
     productDeleteClick = (event) => {
-        console.log(event.target.id);
+        console.log(JSON.parse(event.target.value));
     }
 
     productUpdateClick = (event) => {
-        console.log(event.target.id);
+        console.log(JSON.parse(event.target.value));
+        this.openUpdateModal();
     }
 }
 

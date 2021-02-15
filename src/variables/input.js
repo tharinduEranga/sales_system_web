@@ -18,4 +18,23 @@ const InputText = ({label, id, name, value, onChange, error}) => {
     );
 }
 
-export default InputText;
+const InputSelect = ({label, id, name, value, onChange, options, error}) => {
+    return (
+        <FormGroup>
+            <label>{label}</label>
+            <select
+                className="form-control form-control-lg"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                placeholder={"Select " + label}
+                value={value}
+                id={id}
+                name={name}
+                onChange={onChange}
+            >{options}</select>
+            {error ? <div className="alert alert-danger">{error}</div> : ''}
+        </FormGroup>
+    );
+}
+
+
+export {InputText, InputSelect};
