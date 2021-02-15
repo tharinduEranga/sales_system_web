@@ -117,7 +117,7 @@ class Products extends React.Component {
                                         <Modal.Body>
                                             <div className="container">
                                                 <Form onSubmit={this.addProduct}>
-                                                    <Row>
+                                                    <Row className="justify-content-center">
                                                         <Col className="pr-1" md="12">
                                                             <InputText
                                                                 label="Product Name"
@@ -128,8 +128,8 @@ class Products extends React.Component {
                                                                 onChange={this.handleAddFormChange}
                                                             />
                                                         </Col>
-                                                        <Col md="10">
-                                                            <Button type="submit" variant="primary"
+                                                        <Col md="12">
+                                                            <Button type="submit" variant="primary" block
                                                                     disabled={this.state.processing}>Save</Button>
                                                         </Col>
                                                     </Row>
@@ -175,8 +175,8 @@ class Products extends React.Component {
                                                                 ]}>
                                                             </InputSelect>
                                                         </Col>
-                                                        <Col md="10">
-                                                            <Button type="submit" variant="primary"
+                                                        <Col md="12">
+                                                            <Button type="submit" variant="primary" block
                                                                     disabled={this.state.processing}>Update</Button>
                                                         </Col>
                                                     </Row>
