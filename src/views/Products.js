@@ -9,28 +9,11 @@ import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect} from "../variables/input";
 import Joi from "joi-browser";
-
-axios.interceptors.response.use(response => {
-    if (response.data && !response.data.success) {
-        Functions.errorSwal(response.data.message);
-    }
-    return Promise.resolve(response);
-}, error => {
-    if (!error.response)
-        Functions.errorSwal(error.message);
-    switch (error.response.status) {
-        case 400:
-        case 401:
-        case 403:
-        case 500:
-            Functions.errorSwal(error.response.data.message);
-            break;
-    }
-    return Promise.reject(error);
-});
+import INTERCEPTOR from "variables/global/interceptor";
 
 class Products extends React.Component {
     state = {
+        interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
         productsUrl: SERVER_URL_DEV.concat(`/product`),
         addModalOpen: false,
         updateModalOpen: false,
