@@ -56,7 +56,7 @@ const dashRoutes = [
   {
     path: "/branch",
     name: "Branch List",
-    icon: "files_paper",
+    icon: "business_bank",
     component: Branch,
     layout: "/admin",
   },
