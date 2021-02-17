@@ -22,6 +22,7 @@ import Typography from "views/Typography.js";
 import TableList from "views/TableList.js";
 import UserPage from "views/UserPage.js";
 import Products from "views/Products";
+import Branch from "./views/Branch";
 
 const dashRoutes = [
   {
@@ -53,10 +54,10 @@ const dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/extended-tables",
-    name: "Table List",
+    path: "/branch",
+    name: "Branch List",
     icon: "files_paper",
-    component: TableList,
+    component: Branch,
     layout: "/admin",
   },
   {
