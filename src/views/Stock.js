@@ -97,6 +97,7 @@ class Stock extends React.Component {
         },
         branches: [<option key='' value=''>(Select a branch)</option>],
         products: [<option key='' value=''>(Select a product)</option>],
+        selectedBranchId: '',
         processing: false
     }
 
@@ -146,14 +147,14 @@ class Stock extends React.Component {
 
                                     <div className="row container" style={{height: "12vh"}}>
                                         <div className="align-items-start justify-content-start col-6"
-                                             style={{"margin-top": "10px"}}>
+                                             style={{marginTop: "10px"}}>
                                             <InputSelect
                                                 label=""
                                                 id="selectBranchId"
                                                 name="selectBranchId"
-                                                error={this.state.addStockErrors.branchId}
-                                                value={this.state.addStock.branchId}
-                                                onChange={this.handleAddFormChange}
+                                                error={''}
+                                                value={this.state.selectedBranchId}
+                                                onChange={this.handleSelectBranchChange}
                                                 options={
                                                     this.state.branches
                                                 }
@@ -343,7 +344,9 @@ class Stock extends React.Component {
 
     async setStocks() {
 
-        const response = await axios.get(this.state.stocksUrl);
+        const selectedBranchId = this.state.selectedBranchId;
+        const response = await axios.get(selectedBranchId ? this.state.stocksUrl + `/branch/` + selectedBranchId
+            : this.state.stocksUrl);
 
         const dataWithButton = response.data.data.map(data => {
             data.action = <React.Fragment>
@@ -396,6 +399,12 @@ class Stock extends React.Component {
         const updateStock = {...this.state.updateStock};
         updateStock[input.name] = input.value;
         this.setState({updateStock});
+    }
+
+    handleSelectBranchChange = async ({currentTarget: input}) => {
+        let selectedBranchId = input.value;
+        await this.setState({selectedBranchId});
+        this.setStocks();
     }
 
     addStock = async event => {
