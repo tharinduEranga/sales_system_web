@@ -36,5 +36,21 @@ const InputSelect = ({label, id, name, value, onChange, options, error}) => {
     );
 }
 
+const InputNumber = ({label, id, name, value, onChange, error}) => {
+    return (
+        <FormGroup>
+            <label>{label}</label>
+            <Input
+                placeholder={"Enter " + label}
+                type="number"
+                value={value}
+                id={id}
+                name={name}
+                onChange={onChange}
+            />
+            {error ? <div className="alert alert-danger">{error}</div> : ''}
+        </FormGroup>
+    );
+}
 
-export {InputText, InputSelect};
+export {InputText, InputSelect, InputNumber};

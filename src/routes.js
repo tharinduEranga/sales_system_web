@@ -19,10 +19,9 @@ import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
-import TableList from "views/TableList.js";
-import UserPage from "views/UserPage.js";
 import Products from "views/Products";
 import Branch from "./views/Branch";
+import Stock from "./views/Stock";
 
 const dashRoutes = [
   {
@@ -47,10 +46,10 @@ const dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/user-page",
-    name: "User Profile",
-    icon: "users_single-02",
-    component: UserPage,
+    path: "/stock",
+    name: "Current Stock",
+    icon: "business_bank",
+    component: Stock,
     layout: "/admin",
   },
   {
