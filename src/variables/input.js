@@ -21,7 +21,7 @@ const InputText = ({label, id, name, value, onChange, error}) => {
 const InputSelect = ({label, id, name, value, onChange, options, error}) => {
     return (
         <FormGroup>
-            <label>{label}</label>
+            {label ? <label>{label}</label> : ''}
             <select
                 className="form-control form-control-lg"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"

@@ -127,10 +127,12 @@ class Branch extends React.Component {
                                 </CardHeader>
                                 <CardBody>
 
-                                    <div className="container w-75">
-                                        <div className="d-flex align-items-end justify-content-end"
-                                             style={{height: "10vh"}}>
-                                            <Button variant="primary" onClick={this.openAddModal}>Add New</Button>
+                                    <div className="row container" style={{height: "12vh"}}>
+                                        <div className="col-6">{}</div>
+                                        <div className="col-6">
+                                            <div className="d-flex align-items-end justify-content-end">
+                                                <Button variant="primary" className="w-100" onClick={this.openAddModal}>Add New</Button>
+                                            </div>
                                         </div>
                                     </div>
                                     <Modal show={this.state.addModalOpen} onHide={this.closeAddModal}>

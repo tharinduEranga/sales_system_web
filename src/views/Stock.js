@@ -75,12 +75,7 @@ class Stock extends React.Component {
                     width: 100
                 },
                 {
-                    label: 'Branch Name',
-                    field: 'branchName',
-                    sort: 'asc',
-                    width: 150
-                }, {
-                    label: 'Product Name',
+                    label: 'Product',
                     field: 'productName',
                     sort: 'asc',
                     width: 150
@@ -146,14 +141,32 @@ class Stock extends React.Component {
                                 <CardHeader>
                                     <CardTitle tag="h4">Stocks</CardTitle>
                                 </CardHeader>
+
                                 <CardBody>
 
-                                    <div className="container w-75">
-                                        <div className="d-flex align-items-end justify-content-end"
-                                             style={{height: "10vh"}}>
-                                            <Button variant="primary" onClick={this.openAddModal}>Add New</Button>
+                                    <div className="row container" style={{height: "12vh"}}>
+                                        <div className="align-items-start justify-content-start col-6"
+                                             style={{"margin-top": "10px"}}>
+                                            <InputSelect
+                                                label=""
+                                                id="selectBranchId"
+                                                name="selectBranchId"
+                                                error={this.state.addStockErrors.branchId}
+                                                value={this.state.addStock.branchId}
+                                                onChange={this.handleAddFormChange}
+                                                options={
+                                                    this.state.branches
+                                                }
+                                            >
+                                            </InputSelect>
+                                        </div>
+
+                                        <div className="align-items-center justify-content-center col-6">
+                                            <Button variant="primary" className="w-100" onClick={this.openAddModal}>Add
+                                                New</Button>
                                         </div>
                                     </div>
+
                                     <Modal show={this.state.addModalOpen} onHide={this.closeAddModal}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>New Stock Details</Modal.Title>
