@@ -16,13 +16,14 @@
 
 */
 import Dashboard from "views/Dashboard.js";
-import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
 import Products from "views/Products";
 import Branch from "./views/Branch";
 import Stock from "./views/Stock";
 import StockRequest from "./views/StockRequest";
+import MakeStockRequest from "./views/MakeStockRequest";
+import React from "react";
 
 const dashRoutes = [
   {
@@ -76,4 +77,13 @@ const dashRoutes = [
   },
 
 ];
-export default dashRoutes;
+
+const internalRoutes = [
+  {
+    path: "/make-stock-request",
+    component: MakeStockRequest,
+    layout: "/admin",
+  },
+];
+
+export {dashRoutes, internalRoutes};

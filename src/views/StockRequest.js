@@ -5,40 +5,16 @@ import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap"
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
 import {SERVER_URL_DEV} from "../variables/constants";
-import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
-import {InputText, InputSelect} from "../variables/input";
-import Joi from "joi-browser";
+import {InputSelect} from "../variables/input";
 import INTERCEPTOR from "variables/global/interceptor";
+import {internalRoutes} from "../routes";
 
 class StockRequest extends React.Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
         stockRequestsUrl: SERVER_URL_DEV.concat(`/stock-request`),
         branchesUrl: SERVER_URL_DEV.concat(`/branch`),
-        addModalOpen: false,
-        updateModalOpen: false,
-        addStockRequest: {
-            byBranchId: '',
-            forBranchId: '',
-            vehicleId: ''
-        },
-        updateStockRequest: {
-            id: '',
-            byBranchId: '',
-            forBranchId: '',
-            vehicleId: ''
-        },
-        addStockRequestErrors: {
-            byBranchId: '',
-            forBranchId: '',
-            vehicleId: ''
-        },
-        updateStockRequestErrors: {
-            byBranchId: '',
-            forBranchId: '',
-            vehicleId: ''
-        },
         stockRequestsTable: {
             columns: [
                 {
@@ -97,26 +73,6 @@ class StockRequest extends React.Component {
         processing: false
     }
 
-    addValidateSchema = {
-        name: Joi.string().required(),
-        address: Joi.string().required(),
-        tel: Joi.string().required()
-    }
-
-    updateValidateSchema = {
-        id: Joi.string().required(),
-        name: Joi.string().required(),
-        address: Joi.string().required(),
-        tel: Joi.string().required(),
-        statusId: Joi.number().required()
-    }
-
-    openAddModal = () => this.setState({addModalOpen: true});
-    closeAddModal = () => this.setState({addModalOpen: false});
-
-    openUpdateModal = () => this.setState({updateModalOpen: true});
-    closeUpdateModal = () => this.setState({updateModalOpen: false});
-
     async componentDidMount() {
         this.setBranches();
         this.setStockRequests();
@@ -154,129 +110,10 @@ class StockRequest extends React.Component {
                                         </div>
                                         <div className="col-6">
                                             <div className="d-flex align-items-end justify-content-end">
-                                                <Button variant="primary" className="w-100" onClick={this.openAddModal}>Add New</Button>
+                                                <Button variant="primary" className="w-100" onClick={this.redirectToAdd}>Add New</Button>
                                             </div>
                                         </div>
                                     </div>
-                                    <Modal show={this.state.addModalOpen} onHide={this.closeAddModal}>
-                                        <Modal.Header closeButton>
-                                            <Modal.Title>New Stock Request Details</Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body>
-                                            <div className="container">
-                                                <Form onSubmit={this.addStockRequest}>
-                                                    <Row className="justify-content-center">
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="Stock Request Name"
-                                                                id="name"
-                                                                name="name"
-                                                                error={this.state.addStockRequestErrors.name}
-                                                                value={this.state.addStockRequest.name}
-                                                                onChange={this.handleAddFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="StockRequest Address"
-                                                                id="address"
-                                                                name="address"
-                                                                error={this.state.addStockRequestErrors.address}
-                                                                value={this.state.addStockRequest.address}
-                                                                onChange={this.handleAddFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="StockRequest Tel"
-                                                                id="tel"
-                                                                name="tel"
-                                                                error={this.state.addStockRequestErrors.tel}
-                                                                value={this.state.addStockRequest.tel}
-                                                                onChange={this.handleAddFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col md="12">
-                                                            <Button type="submit" variant="primary" block
-                                                                    disabled={this.state.processing}>Save</Button>
-                                                        </Col>
-                                                    </Row>
-                                                </Form>
-                                            </div>
-                                        </Modal.Body>
-                                        <Modal.Footer>
-                                            <Button variant="secondary" onClick={this.closeAddModal}>
-                                                Close
-                                            </Button>
-                                        </Modal.Footer>
-                                    </Modal>
-
-                                    <Modal show={this.state.updateModalOpen} onHide={this.closeUpdateModal}>
-                                        <Modal.Header closeButton>
-                                            <Modal.Title>Update Stock Request Details</Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body>
-                                            <div className="container">
-                                                <Form onSubmit={this.updateStockRequest}>
-                                                    <Row>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="StockRequest Name"
-                                                                id="name"
-                                                                name="name"
-                                                                error={this.state.updateStockRequestErrors.name}
-                                                                value={this.state.updateStockRequest.name}
-                                                                onChange={this.handleUpdateFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="StockRequest Address"
-                                                                id="address"
-                                                                name="address"
-                                                                error={this.state.updateStockRequestErrors.address}
-                                                                value={this.state.updateStockRequest.address}
-                                                                onChange={this.handleUpdateFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputText
-                                                                label="StockRequest Tel"
-                                                                id="tel"
-                                                                name="tel"
-                                                                error={this.state.updateStockRequestErrors.tel}
-                                                                value={this.state.updateStockRequest.tel}
-                                                                onChange={this.handleUpdateFormChange}
-                                                            />
-                                                        </Col>
-                                                        <Col className="pr-1" md="12">
-                                                            <InputSelect
-                                                                label="StockRequest Status"
-                                                                id="statusId"
-                                                                name="statusId"
-                                                                error={this.state.updateStockRequestErrors.statusId}
-                                                                value={this.state.updateStockRequest.statusId}
-                                                                onChange={this.handleUpdateFormChange}
-                                                                options={[
-                                                                    <option key={1} value={1}>Active</option>,
-                                                                    <option key={0} value={0}>Inactive</option>
-                                                                ]}>
-                                                            </InputSelect>
-                                                        </Col>
-                                                        <Col md="12">
-                                                            <Button type="submit" variant="primary" block
-                                                                    disabled={this.state.processing}>Update</Button>
-                                                        </Col>
-                                                    </Row>
-                                                </Form>
-                                            </div>
-                                        </Modal.Body>
-                                        <Modal.Footer>
-                                            <Button variant="secondary" onClick={this.closeUpdateModal}>
-                                                Close
-                                            </Button>
-                                        </Modal.Footer>
-                                    </Modal>
 
                                     <div className="container">
                                         <MDBDataTableV5 hover entriesOptions={[5, 20, 25]}
@@ -329,111 +166,23 @@ class StockRequest extends React.Component {
         });
     }
 
-    handleAddFormChange = ({currentTarget: input}) => {
-        const addStockRequest = {...this.state.addStockRequest};
-        addStockRequest[input.name] = input.value;
-        this.setState({addStockRequest});
-    }
-
-    handleUpdateFormChange = ({currentTarget: input}) => {
-        const updateStockRequest = {...this.state.updateStockRequest};
-        updateStockRequest[input.name] = input.value;
-        this.setState({updateStockRequest});
-    }
-
     handleSelectBranchChange = async ({currentTarget: input}) => {
         let selectedBranchId = input.value;
         await this.setState({selectedBranchId});
         this.setStockRequests();
     }
 
-    addStockRequest = async event => {
-        event.preventDefault();
-        const addStockRequestErrors = this.addFormErrors();
-        this.setState({addStockRequestErrors});
-        if (Object.keys(addStockRequestErrors).length > 0)
-            return;
-
-        this.setProcessing(true);
-
-        try {
-            const response = await axios.post(this.state.stockRequestsUrl, this.state.addStockRequest);
-            if (response.data.success) {
-                Functions.successSwal(response.data.message);
-                this.closeAddModal();
-                this.setState({addStockRequest: {name: ''}});
-                await this.setStockRequests();
-            }
-        } catch (e) {
-        }
-
-        this.setProcessing(false);
-    }
-
-    updateStockRequest = async event => {
-        event.preventDefault();
-        const updateStockRequestErrors = this.updateFormErrors();
-        this.setState({updateStockRequestErrors});
-        if (Object.keys(updateStockRequestErrors).length > 0)
-            return;
-
-        this.setProcessing(true);
-
-        try {
-            const response = await axios.put(this.state.stockRequestsUrl, this.state.updateStockRequest);
-            if (response.data.success) {
-                Functions.successSwal(response.data.message);
-                this.closeUpdateModal();
-                await this.setStockRequests();
-            }
-        } catch (e) {
-        }
-
-        this.setProcessing(false);
-    }
-
-    addFormErrors = () => {
-        const errors = {};
-        const {addStockRequest} = this.state;
-        const options = {abortEarly: false};
-        let validate = Joi.validate(addStockRequest, this.addValidateSchema, options);
-
-        if (!validate.error) return errors;
-
-        for (const detail of validate.error.details)
-            errors[detail.path] = detail.message;
-        return errors;
-    }
-
-    updateFormErrors = () => {
-        const errors = {};
-        const {updateStockRequest} = this.state;
-        const options = {abortEarly: false};
-        let validate = Joi.validate(updateStockRequest, this.updateValidateSchema, options);
-
-        if (!validate.error) return errors;
-
-        for (const detail of validate.error.details)
-            errors[detail.path] = detail.message;
-        return errors;
-    }
-
     stockRequestUpdateClick = (event) => {
         const selected = JSON.parse(event.target.value);
-        this.setState({
-            updateStockRequest: {
-                id: selected.id,
-                name: selected.name,
-                address: selected.address,
-                tel: selected.tel,
-                statusId: selected.statusId
-            }
-        });
-        this.openUpdateModal();
     }
 
     setProcessing = (processing) => {
         this.setState({processing: processing});
+    }
+
+    redirectToAdd = () => {
+        const path = internalRoutes[0].layout + internalRoutes[0].path;
+        this.props.history.push(path);
     }
 }
 

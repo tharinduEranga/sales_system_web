@@ -28,7 +28,7 @@ import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import routes from "routes.js";
+import {dashRoutes as routes, internalRoutes} from "routes.js";
 import 'assets/css/custom/admin-global.css';
 
 var ps;
@@ -78,6 +78,15 @@ class Dashboard extends React.Component {
                   component={prop.component}
                   key={key}
                 />
+              );
+            })}
+            {internalRoutes.map((prop, key) => {
+              return (
+                  <Route
+                      path={prop.layout + prop.path}
+                      component={prop.component}
+                      key={routes.length + key + 1}
+                  />
               );
             })}
             <Redirect from="/admin" to="/admin/dashboard" />

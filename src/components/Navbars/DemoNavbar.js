@@ -35,7 +35,7 @@ import {
   Input,
 } from "reactstrap";
 
-import routes from "routes.js";
+import {dashRoutes as routes} from "routes.js";
 
 class Header extends React.Component {
   state = {
