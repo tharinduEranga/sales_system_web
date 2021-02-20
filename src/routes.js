@@ -22,6 +22,7 @@ import Typography from "views/Typography.js";
 import Products from "views/Products";
 import Branch from "./views/Branch";
 import Stock from "./views/Stock";
+import StockRequest from "./views/StockRequest";
 
 const dashRoutes = [
   {
@@ -40,9 +41,9 @@ const dashRoutes = [
   },
   {
     path: "/notifications",
-    name: "Notifications",
+    name: "Stock Request",
     icon: "ui-1_bell-53",
-    component: Notifications,
+    component: StockRequest,
     layout: "/admin",
   },
   {
