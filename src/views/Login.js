@@ -1,45 +1,121 @@
 import React, {Component} from "react";
 import 'assets/css/custom/login.css';
+import {Form} from "react-bootstrap";
+import Joi from "joi-browser";
+import axios from "axios";
+import Functions from "../variables/functions";
+import INTERCEPTOR from "../variables/global/interceptor";
+import {SERVER_URL_DEV} from "../variables/constants";
+import {dashRoutes, internalRoutes} from "../routes";
 
 class Login extends Component {
+    state = {
+        interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
+        loginUrl: SERVER_URL_DEV.concat(`/user/auth`),
+        loginData: {
+            username: '',
+            password: ''
+        },
+        loginDataErrors: {
+            username: '',
+            password: ''
+        },
+    };
+
+    loginValidateSchema = {
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    }
+
     render() {
         return (
+            <body className="login-body">
+
             <div className="login-wrap">
                 <div className="login-html">
-                    <input id="tab-1" type="radio" name="tab" className="sign-in" checked/><label htmlFor="tab-1"
-                                                                                                  className="tab">Sign
-                    In</label>
-                    <input id="tab-2" type="radio" name="tab" className="sign-up"/><label htmlFor="tab-2"
-                                                                                          className="tab">Sign
-                    Up</label>
-                    <div className="login-form">
+                    <input id="tab-1" type="radio" name="tab" className="sign-in"/>
+                    <label htmlFor="tab-1" className="tab">Sign In</label>
+
+                    <Form className="login-form" onSubmit={this.login}>
                         <div className="sign-in-htm">
                             <div className="group">
                                 <label htmlFor="user" className="label">Username</label>
-                                <input id="user" type="text" className="input"/>
+                                <input id="username"
+                                       type="text"
+                                       className="input"
+                                       value={this.state.username}
+                                       name="username"
+                                       onChange={this.handleLoginFormChange}
+                                />
+                                {this.state.loginDataErrors.username ?
+                                    <div
+                                        className="alert alert-danger">{this.state.loginDataErrors.username}</div> : ''}
                             </div>
                             <div className="group">
                                 <label htmlFor="pass" className="label">Password</label>
-                                <input id="pass" type="password" className="input"/>
+                                <input id="password"
+                                       type="password"
+                                       className="input"
+                                       value={this.state.password}
+                                       name="password"
+                                       onChange={this.handleLoginFormChange}/>
+                                {this.state.loginDataErrors.password ?
+                                    <div
+                                        className="alert alert-danger">{this.state.loginDataErrors.password}</div> : ''}
                             </div>
-                            <div className="group">
-                                <input id="check" type="checkbox" className="check" checked/>
-                                <label htmlFor="check"><span className="icon"/> Keep me Signed
-                                    in</label>
-                            </div>
+
                             <div className="group">
                                 <input type="submit" className="button" value="Sign In"/>
                             </div>
-                            <div className="hr"/>
+                            <div className="login-hr"/>
                             <div className="foot-lnk">
-                                <a href="#forgot">Forgot Password?</a>
+                                <a className="login-a" href="#forgot">Forgot Password?</a>
                             </div>
                         </div>
 
-                    </div>
+                    </Form>
                 </div>
             </div>
+            </body>
         );
+    }
+
+    handleLoginFormChange = ({currentTarget: input}) => {
+        const loginData = {...this.state.loginData};
+        loginData[input.name] = input.value;
+        this.setState({loginData});
+    }
+
+    login = async (event) => {
+        event.preventDefault();
+        const loginDataErrors = this.loginDataErrors();
+        this.setState({loginDataErrors});
+        if (Object.keys(loginDataErrors).length > 0)
+            return;
+
+        try {
+            const response = await axios.post(this.state.loginUrl, this.state.loginData);
+            this.redirectToDash();
+        } catch (e) {
+        }
+    }
+
+    loginDataErrors = () => {
+        const errors = {};
+        const {loginData} = this.state;
+        const options = {abortEarly: false};
+        let validate = Joi.validate(loginData, this.loginValidateSchema, options);
+
+        if (!validate.error) return errors;
+
+        for (const detail of validate.error.details)
+            errors[detail.path] = detail.message;
+        return errors;
+    }
+
+    redirectToDash = () => {
+        const path = dashRoutes[0].layout;
+        this.props.history.push(path);
     }
 }
 

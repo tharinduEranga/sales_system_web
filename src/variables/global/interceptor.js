@@ -2,7 +2,7 @@ import axios from "axios";
 import Functions from "../functions";
 
 const INTERCEPTOR = axios.interceptors.response.use(response => {
-    if (response.data && !response.data.success) {
+    if (response.data && response.data.success && response.data.success === false) {
         Functions.errorSwal(response.data.message);
     }
     return Promise.resolve(response);
