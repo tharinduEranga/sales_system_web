@@ -31,12 +31,14 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import {dashRoutes as routes, internalRoutes} from "routes.js";
 import 'assets/css/custom/admin-global.css';
 import {USER_ROLE_KEY} from "../variables/constants";
+import Memory from "../variables/memory";
 
 var ps;
 
 class Dashboard extends React.Component {
   state = {
     backgroundColor: "orange",
+    filteredRoutes: this.getFilteredRoutes()
   };
   mainPanel = React.createRef();
   componentDidMount() {
@@ -62,12 +64,8 @@ class Dashboard extends React.Component {
     this.setState({ backgroundColor: color });
   };
   render() {
-    const loggedUserRole = sessionStorage.getItem(USER_ROLE_KEY);
 
-    const filteredRoutes = routes.reduce(function(filtered, route) {
-      if (route.roles.includes(loggedUserRole)) filtered.push(route);
-      return filtered;
-    }, []);
+    const filteredRoutes = this.state.filteredRoutes;
 
     return (
       <div className="wrapper">
@@ -107,6 +105,15 @@ class Dashboard extends React.Component {
         />
       </div>
     );
+  }
+
+  getFilteredRoutes () {
+    const loggedUserRole = Memory.getValue(USER_ROLE_KEY);
+
+    return routes.reduce(function (filtered, route) {
+      if (route.roles.includes(loggedUserRole)) filtered.push(route);
+      return filtered;
+    }, []);
   }
 }
 
