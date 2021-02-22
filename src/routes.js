@@ -24,6 +24,7 @@ import Stock from "./views/Stock";
 import StockRequest from "./views/StockRequest";
 import MakeStockRequest from "./views/MakeStockRequest";
 import React from "react";
+import Login from "./views/Login";
 
 const dashRoutes = [
   {
@@ -74,8 +75,7 @@ const dashRoutes = [
     icon: "design-2_ruler-pencil",
     component: Typography,
     layout: "/admin",
-  },
-
+  }
 ];
 
 const internalRoutes = [
