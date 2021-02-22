@@ -62,7 +62,7 @@
     border-bottom: 2px solid transparent;
 }
 
-.login-html .sign-in:checked + .tab {
+.login-html .sign-in .tab {
     color: #fff;
     border-color: #1161ee;
 }

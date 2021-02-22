@@ -20,7 +20,7 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 
 // reactstrap components
-import { Route, Switch, Redirect } from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 
 // core components
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
@@ -30,6 +30,7 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import {dashRoutes as routes, internalRoutes} from "routes.js";
 import 'assets/css/custom/admin-global.css';
+import {USER_ROLE_KEY} from "../variables/constants";
 
 var ps;
 
@@ -61,17 +62,24 @@ class Dashboard extends React.Component {
     this.setState({ backgroundColor: color });
   };
   render() {
+    const loggedUserRole = sessionStorage.getItem(USER_ROLE_KEY);
+
+    const filteredRoutes = routes.reduce(function(filtered, route) {
+      if (route.roles.includes(loggedUserRole)) filtered.push(route);
+      return filtered;
+    }, []);
+
     return (
       <div className="wrapper">
         <Sidebar
           {...this.props}
-          routes={routes}
+          routes={filteredRoutes}
           backgroundColor={this.state.backgroundColor}
         />
         <div className="main-panel" ref={this.mainPanel}>
           <DemoNavbar {...this.props} />
           <Switch>
-            {routes.map((prop, key) => {
+            {filteredRoutes.map((prop, key) => {
               return (
                 <Route
                   path={prop.layout + prop.path}
@@ -85,7 +93,7 @@ class Dashboard extends React.Component {
                   <Route
                       path={prop.layout + prop.path}
                       component={prop.component}
-                      key={routes.length + key + 1}
+                      key={filteredRoutes.length + key + 1}
                   />
               );
             })}

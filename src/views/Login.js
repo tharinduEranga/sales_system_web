@@ -5,7 +5,7 @@ import Joi from "joi-browser";
 import axios from "axios";
 import Functions from "../variables/functions";
 import INTERCEPTOR from "../variables/global/interceptor";
-import {SERVER_URL_DEV} from "../variables/constants";
+import {SERVER_URL_DEV, USER_ROLE_KEY} from "../variables/constants";
 import {dashRoutes, internalRoutes} from "../routes";
 
 class Login extends Component {
@@ -30,55 +30,60 @@ class Login extends Component {
 
     render() {
         return (
-            <body className="login-body">
+            <React.Fragment>
 
-            <div className="login-wrap">
-                <div className="login-html">
-                    <input id="tab-1" type="radio" name="tab" className="sign-in"/>
-                    <label htmlFor="tab-1" className="tab">Sign In</label>
+                <div className="login-body">
 
-                    <Form className="login-form" onSubmit={this.login}>
-                        <div className="sign-in-htm">
-                            <div className="group">
-                                <label htmlFor="user" className="label">Username</label>
-                                <input id="username"
-                                       type="text"
-                                       className="input"
-                                       value={this.state.username}
-                                       name="username"
-                                       onChange={this.handleLoginFormChange}
-                                />
-                                {this.state.loginDataErrors.username ?
-                                    <div
-                                        className="alert alert-danger">{this.state.loginDataErrors.username}</div> : ''}
-                            </div>
-                            <div className="group">
-                                <label htmlFor="pass" className="label">Password</label>
-                                <input id="password"
-                                       type="password"
-                                       className="input"
-                                       value={this.state.password}
-                                       name="password"
-                                       onChange={this.handleLoginFormChange}/>
-                                {this.state.loginDataErrors.password ?
-                                    <div
-                                        className="alert alert-danger">{this.state.loginDataErrors.password}</div> : ''}
-                            </div>
+                    <div className="login-wrap">
+                        <div className="login-html">
+                            <input id="tab-1" type="radio" name="tab" className="sign-in"/>
+                            <label htmlFor="tab-1" className="tab">Sign In</label>
 
-                            <div className="group">
-                                <input type="submit" style={this.state.processing ? {backgroundColor: "lightsteelblue"} : {}} disabled={this.state.processing}
-                                       className="button" value="Sign In"/>
-                            </div>
-                            <div className="login-hr"/>
-                            <div className="foot-lnk">
-                                <a className="login-a" href="#forgot">Forgot Password?</a>
-                            </div>
+                            <Form className="login-form" onSubmit={this.login}>
+                                <div className="sign-in-htm">
+                                    <div className="group">
+                                        <label htmlFor="user" className="label">Username</label>
+                                        <input id="username"
+                                               type="text"
+                                               className="input"
+                                               value={this.state.username}
+                                               name="username"
+                                               onChange={this.handleLoginFormChange}
+                                        />
+                                        {this.state.loginDataErrors.username ?
+                                            <div
+                                                className="alert alert-danger">{this.state.loginDataErrors.username}</div> : ''}
+                                    </div>
+                                    <div className="group">
+                                        <label htmlFor="pass" className="label">Password</label>
+                                        <input id="password"
+                                               type="password"
+                                               className="input"
+                                               value={this.state.password}
+                                               name="password"
+                                               onChange={this.handleLoginFormChange}/>
+                                        {this.state.loginDataErrors.password ?
+                                            <div
+                                                className="alert alert-danger">{this.state.loginDataErrors.password}</div> : ''}
+                                    </div>
+
+                                    <div className="group">
+                                        <input type="submit"
+                                               style={this.state.processing ? {backgroundColor: "lightsteelblue"} : {}}
+                                               disabled={this.state.processing}
+                                               className="button" value="Sign In"/>
+                                    </div>
+                                    <div className="login-hr"/>
+                                    <div className="foot-lnk">
+                                        <a className="login-a" href="#forgot">Forgot Password?</a>
+                                    </div>
+                                </div>
+
+                            </Form>
                         </div>
-
-                    </Form>
+                    </div>
                 </div>
-            </div>
-            </body>
+            </React.Fragment>
         );
     }
 
@@ -97,6 +102,8 @@ class Login extends Component {
         this.setProcessing(true);
         try {
             const response = await axios.post(this.state.loginUrl, this.state.loginData);
+            if (!response.data.userRole) Functions.errorSwal('Invalid login response');
+            sessionStorage.setItem(USER_ROLE_KEY, response.data.userRole);
             this.redirectToDash();
         } catch (e) {
         }

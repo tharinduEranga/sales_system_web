@@ -24,7 +24,7 @@ import Stock from "./views/Stock";
 import StockRequest from "./views/StockRequest";
 import MakeStockRequest from "./views/MakeStockRequest";
 import React from "react";
-import Login from "./views/Login";
+import {USER_ROLES as roles} from "./variables/constants";
 
 const dashRoutes = [
   {
@@ -33,6 +33,7 @@ const dashRoutes = [
     icon: "design_app",
     component: Dashboard,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
   {
     path: "/icons",
@@ -40,6 +41,7 @@ const dashRoutes = [
     icon: "design_image",
     component: Icons,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
   {
     path: "/notifications",
@@ -47,6 +49,7 @@ const dashRoutes = [
     icon: "ui-1_bell-53",
     component: StockRequest,
     layout: "/admin",
+    roles: [roles.BRANCH_ADMIN]
   },
   {
     path: "/stock",
@@ -54,6 +57,7 @@ const dashRoutes = [
     icon: "business_bank",
     component: Stock,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
   {
     path: "/branch",
@@ -61,6 +65,7 @@ const dashRoutes = [
     icon: "business_bank",
     component: Branch,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN]
   },
   {
     path: "/products",
@@ -68,6 +73,7 @@ const dashRoutes = [
     icon: "shopping_box",
     component: Products,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN]
   },
   {
     path: "/typography",
@@ -75,6 +81,7 @@ const dashRoutes = [
     icon: "design-2_ruler-pencil",
     component: Typography,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   }
 ];
 
@@ -83,6 +90,7 @@ const internalRoutes = [
     path: "/make-stock-request",
     component: MakeStockRequest,
     layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
 ];
 
