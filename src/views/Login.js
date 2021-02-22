@@ -20,6 +20,7 @@ class Login extends Component {
             username: '',
             password: ''
         },
+        processing: false
     };
 
     loginValidateSchema = {
@@ -65,7 +66,8 @@ class Login extends Component {
                             </div>
 
                             <div className="group">
-                                <input type="submit" className="button" value="Sign In"/>
+                                <input type="submit" style={this.state.processing ? {backgroundColor: "lightsteelblue"} : {}} disabled={this.state.processing}
+                                       className="button" value="Sign In"/>
                             </div>
                             <div className="login-hr"/>
                             <div className="foot-lnk">
@@ -92,12 +94,13 @@ class Login extends Component {
         this.setState({loginDataErrors});
         if (Object.keys(loginDataErrors).length > 0)
             return;
-
+        this.setProcessing(true);
         try {
             const response = await axios.post(this.state.loginUrl, this.state.loginData);
             this.redirectToDash();
         } catch (e) {
         }
+        this.setProcessing(false);
     }
 
     loginDataErrors = () => {
@@ -116,6 +119,10 @@ class Login extends Component {
     redirectToDash = () => {
         const path = dashRoutes[0].layout;
         this.props.history.push(path);
+    }
+
+    setProcessing = (processing) => {
+        this.setState({processing: processing});
     }
 }
 
