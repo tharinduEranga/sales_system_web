@@ -30,7 +30,7 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import {dashRoutes as routes, internalRoutes} from "routes.js";
 import 'assets/css/custom/admin-global.css';
-import {USER_ROLE_KEY} from "../variables/constants";
+import {USER_KEY} from "../variables/constants";
 import Memory from "../variables/memory";
 
 var ps;
@@ -108,7 +108,7 @@ class Dashboard extends React.Component {
   }
 
   getFilteredRoutes () {
-    const loggedUserRole = Memory.getValue(USER_ROLE_KEY).userRole;
+    const loggedUserRole = Memory.getValue(USER_KEY).userRole;
 
     return routes.reduce(function (filtered, route) {
       if (route.roles.includes(loggedUserRole)) filtered.push(route);

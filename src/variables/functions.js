@@ -1,4 +1,6 @@
 import Swal from "sweetalert2";
+import Memory from "./memory";
+import {USER_KEY, USER_ROLES} from "./constants";
 
 class Functions {
     static successSwal(message) {
@@ -36,6 +38,15 @@ class Functions {
             cancelButtonColor: '#d33',
             confirmButtonText: confirmButtonText
         });
+    }
+
+    static branchVisible() {
+        const userData = Memory.getValue(USER_KEY);
+        return userData.userRole === USER_ROLES.HEAD_OFFICE_ADMIN;
+    }
+
+    static getBranchComboVisibility() {
+        return this.branchVisible() ? "" : "none";
     }
 
 }

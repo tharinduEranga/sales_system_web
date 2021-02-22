@@ -4,12 +4,13 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV} from "../variables/constants";
+import {SERVER_URL_DEV, USER_KEY, USER_ROLES} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect, InputNumber} from "../variables/input";
 import Joi from "joi-browser";
 import INTERCEPTOR from "variables/global/interceptor";
+import Memory from "../variables/memory";
 
 class Stock extends React.Component {
     state = {
@@ -125,6 +126,7 @@ class Stock extends React.Component {
     closeUpdateModal = () => this.setState({updateModalOpen: false});
 
     async componentDidMount() {
+        await this.setBranchId();
         this.setStocks();
         this.setBranches();
         this.setProducts();
@@ -147,7 +149,7 @@ class Stock extends React.Component {
 
                                     <div className="row container" style={{height: "12vh"}}>
                                         <div className="align-items-start justify-content-start col-6"
-                                             style={{marginTop: "10px"}}>
+                                             style={{marginTop: "10px", display: Functions.getBranchComboVisibility()}}>
                                             <InputSelect
                                                 label=""
                                                 id="selectBranchId"
@@ -206,7 +208,7 @@ class Stock extends React.Component {
                                                                 onChange={this.handleAddFormChange}
                                                             />
                                                         </Col>
-                                                        <Col className="pr-1" md="12">
+                                                        <Col className="pr-1" md="12" style={{display: Functions.getBranchComboVisibility()}}>
                                                             <InputSelect
                                                                 label="Branch"
                                                                 id="branchId"
@@ -285,7 +287,7 @@ class Stock extends React.Component {
                                                                 onChange={this.handleUpdateFormChange}
                                                             />
                                                         </Col>
-                                                        <Col className="pr-1" md="12">
+                                                        <Col className="pr-1" md="12" style={{display: Functions.getBranchComboVisibility()}}>
                                                             <InputSelect
                                                                 label="Branch"
                                                                 id="branchId"
@@ -366,6 +368,7 @@ class Stock extends React.Component {
     }
 
     async setBranches() {
+        if (!Functions.branchVisible()) return;
         const response = await axios.get(this.state.branchesUrl);
         let branchOptions = response.data.data.map(branch => {
             return <option key={branch.id} value={branch.id}>{branch.name}</option>
@@ -521,6 +524,19 @@ class Stock extends React.Component {
             }
         });
         this.openUpdateModal();
+    }
+
+    async setBranchId() {
+        const userData = Memory.getValue(USER_KEY);
+        const selectedBranchId = userData.userRole === USER_ROLES.HEAD_OFFICE_ADMIN
+            ? this.state.selectedBranchId : userData.branchId;
+        await this.setState({selectedBranchId: selectedBranchId});
+        const updateStock = {...this.state.updateStock};
+        updateStock.branchId = selectedBranchId;
+        this.setState({updateStock});
+        const addStock = {...this.state.addStock};
+        addStock.branchId = selectedBranchId;
+        this.setState({addStock});
     }
 
     setProcessing = (processing) => {

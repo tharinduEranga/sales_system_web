@@ -4,12 +4,13 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV} from "../variables/constants";
+import {SERVER_URL_DEV, USER_KEY} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect, InputNumber} from "../variables/input";
 import Joi from "joi-browser";
 import INTERCEPTOR from "variables/global/interceptor";
+import Memory from "../variables/memory";
 
 class MakeStockRequest extends React.Component {
     state = {
@@ -26,7 +27,7 @@ class MakeStockRequest extends React.Component {
             products: ''
         },
         productAddData: {
-            forBranchId: '43242324',
+            forBranchId: Memory.getValue(USER_KEY).branchId,
             byBranchId: '',
             qty: '',
             productId: ''

@@ -4,11 +4,13 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV} from "../variables/constants";
+import {SERVER_URL_DEV, USER_KEY, USER_ROLES} from "../variables/constants";
 import {Button, Modal} from "react-bootstrap";
 import {InputSelect} from "../variables/input";
 import INTERCEPTOR from "variables/global/interceptor";
 import {internalRoutes} from "../routes";
+import Memory from "../variables/memory";
+import Functions from "../variables/functions";
 
 class StockRequest extends React.Component {
     state = {
@@ -75,6 +77,7 @@ class StockRequest extends React.Component {
 
     async componentDidMount() {
         this.setBranches();
+        await this.setBranchId();
         this.setStockRequests();
     }
 
@@ -94,7 +97,7 @@ class StockRequest extends React.Component {
 
                                     <div className="row container" style={{height: "12vh"}}>
                                         <div className="align-items-start justify-content-start col-6"
-                                             style={{marginTop: "10px"}}>
+                                             style={{marginTop: "10px", display: Functions.getBranchComboVisibility()}}>
                                             <InputSelect
                                                 label=""
                                                 id="selectBranchId"
@@ -132,6 +135,7 @@ class StockRequest extends React.Component {
     }
 
     async setBranches() {
+        if (!Functions.branchVisible()) return;
         const response = await axios.get(this.state.branchesUrl);
         let branchOptions = response.data.data.map(branch => {
             return <option key={branch.id} value={branch.id}>{branch.name}</option>
@@ -145,8 +149,10 @@ class StockRequest extends React.Component {
 
     async setStockRequests() {
 
-        const selectedBranchId = this.state.selectedBranchId;
-        const response = await axios.get(selectedBranchId ? this.state.stockRequestsUrl + `/by-branch/` + selectedBranchId
+        const selectedBranchId = this.state.selectedBranchId
+
+        const response = await axios.get(selectedBranchId
+            ? this.state.stockRequestsUrl + `/by-branch/` + selectedBranchId
             : this.state.stockRequestsUrl);
 
         const dataWithButton = response.data.data.map(data => {
@@ -183,6 +189,13 @@ class StockRequest extends React.Component {
     redirectToAdd = () => {
         const path = internalRoutes[0].layout + internalRoutes[0].path;
         this.props.history.push(path);
+    }
+
+    async setBranchId() {
+        const userData = Memory.getValue(USER_KEY);
+        const selectedBranchId = userData.userRole === USER_ROLES.HEAD_OFFICE_ADMIN
+            ? this.state.selectedBranchId : userData.branchId;
+        await this.setState({selectedBranchId: selectedBranchId});
     }
 }
 

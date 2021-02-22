@@ -5,7 +5,7 @@ import Joi from "joi-browser";
 import axios from "axios";
 import Functions from "../variables/functions";
 import INTERCEPTOR from "../variables/global/interceptor";
-import {SERVER_URL_DEV, USER_ROLE_KEY} from "../variables/constants";
+import {SERVER_URL_DEV, USER_KEY} from "../variables/constants";
 import {dashRoutes, internalRoutes} from "../routes";
 import Memory from "../variables/memory";
 
@@ -104,7 +104,7 @@ class Login extends Component {
         try {
             const response = await axios.post(this.state.loginUrl, this.state.loginData);
             if (!response.data.userRole) Functions.errorSwal('Invalid login response');
-            Memory.setValue(USER_ROLE_KEY, response.data);
+            Memory.setValue(USER_KEY, response.data);
             this.redirectToDash();
         } catch (e) {
         }
