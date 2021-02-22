@@ -104,7 +104,7 @@ class Login extends Component {
         try {
             const response = await axios.post(this.state.loginUrl, this.state.loginData);
             if (!response.data.userRole) Functions.errorSwal('Invalid login response');
-            Memory.setValue(USER_ROLE_KEY, response.data.userRole);
+            Memory.setValue(USER_ROLE_KEY, response.data);
             this.redirectToDash();
         } catch (e) {
         }

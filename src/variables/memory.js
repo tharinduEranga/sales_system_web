@@ -1,10 +1,10 @@
 
 class Memory {
     static setValue(key, value) {
-        sessionStorage.setItem(key, value);
+        sessionStorage.setItem(key, JSON.stringify(value));
     }
     static getValue(key) {
-        return sessionStorage.getItem(key);
+        return JSON.parse(sessionStorage.getItem(key));
     }
 }
 

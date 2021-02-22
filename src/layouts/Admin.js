@@ -108,7 +108,7 @@ class Dashboard extends React.Component {
   }
 
   getFilteredRoutes () {
-    const loggedUserRole = Memory.getValue(USER_ROLE_KEY);
+    const loggedUserRole = Memory.getValue(USER_ROLE_KEY).userRole;
 
     return routes.reduce(function (filtered, route) {
       if (route.roles.includes(loggedUserRole)) filtered.push(route);
