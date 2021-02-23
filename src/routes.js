@@ -25,6 +25,7 @@ import StockRequest from "./views/StockRequest";
 import MakeStockRequest from "./views/MakeStockRequest";
 import React from "react";
 import {USER_ROLES as roles} from "./variables/constants";
+import StockRequestIncoming from "./views/StockRequestIncoming";
 
 const dashRoutes = [
   {
@@ -44,12 +45,20 @@ const dashRoutes = [
     roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
   {
-    path: "/notifications",
+    path: "/stock-request",
     name: "Stock Request",
-    icon: "ui-1_bell-53",
+    icon: "shopping_delivery-fast",
     component: StockRequest,
     layout: "/admin",
     roles: [roles.BRANCH_ADMIN]
+  },
+  {
+    path: "/stock-request-incoming",
+    name: "Requested Stocks",
+    icon: "shopping_cart-simple",
+    component: StockRequestIncoming,
+    layout: "/admin",
+    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
   {
     path: "/stock",
