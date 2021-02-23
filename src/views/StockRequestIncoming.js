@@ -146,12 +146,28 @@ class StockRequestIncoming extends React.Component {
         this.setStockRequests();
     }
 
-    stockRequestApproveClick = (event) => {
+    stockRequestApproveClick = async (event) => {
+        event.preventDefault();
         const selected = JSON.parse(event.target.value);
+
+        const confirm = await Functions.confirmInfoSwal('Yes, approve it!');
+
+        if (!confirm.isConfirmed)
+            return;
+
+        await this.sendRequestUpdateApi(selected.id, 'ON_DELIVERY');
     }
 
-    stockRequestRejectClick = (event) => {
+    stockRequestRejectClick = async (event) => {
+        event.preventDefault();
         const selected = JSON.parse(event.target.value);
+
+        const confirm = await Functions.confirmSwal('Yes, reject it!');
+
+        if (!confirm.isConfirmed)
+            return;
+
+        await this.sendRequestUpdateApi(selected.id, 'REJECTED');
     }
 
     setProcessing = (processing) => {
@@ -161,6 +177,24 @@ class StockRequestIncoming extends React.Component {
     async setBranchId() {
         const userData = Memory.getValue(USER_KEY);
         await this.setState({selectedBranchId: userData.branchId});
+    }
+
+    async sendRequestUpdateApi(stockRequestId, status) {
+        this.setProcessing(true)
+
+        try {
+            const response = await axios
+                .patch(this.state.stockRequestsUrl
+                    .concat('/').concat(stockRequestId)
+                    .concat('/status/').concat(status)
+                );
+            if (response.data.success) {
+                Functions.successSwal(response.data.message);
+                await this.setStockRequests();
+            }
+        } catch (e) {
+        }
+        this.setProcessing(false);
     }
 }
 

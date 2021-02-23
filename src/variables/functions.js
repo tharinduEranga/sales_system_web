@@ -40,6 +40,18 @@ class Functions {
         });
     }
 
+    static confirmInfoSwal(confirmButtonText) {
+        return Swal.fire({
+            title: 'Are you sure?',
+            text: "Please confirm your action",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#309a30',
+            cancelButtonColor: '#d33',
+            confirmButtonText: confirmButtonText
+        });
+    }
+
     static branchVisible() {
         const userData = Memory.getValue(USER_KEY);
         return userData.userRole === USER_ROLES.HEAD_OFFICE_ADMIN;
