@@ -155,7 +155,7 @@ class StockRequestIncoming extends React.Component {
         if (!confirm.isConfirmed)
             return;
 
-        await this.sendRequestUpdateApi(selected.id, 'ON_DELIVERY');
+        await this.sendRequestUpdateApi(selected.id, 'DONE');
     }
 
     stockRequestRejectClick = async (event) => {
