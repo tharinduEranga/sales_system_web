@@ -16,8 +16,6 @@
 
 */
 import Dashboard from "views/Dashboard.js";
-import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
 import Products from "views/Products";
 import Branch from "./views/Branch";
 import Stock from "./views/Stock";
@@ -33,14 +31,6 @@ const dashRoutes = [
     name: "Dashboard",
     icon: "design_app",
     component: Dashboard,
-    layout: "/admin",
-    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "design_image",
-    component: Icons,
     layout: "/admin",
     roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   },
@@ -83,14 +73,6 @@ const dashRoutes = [
     component: Products,
     layout: "/admin",
     roles: [roles.HEAD_OFFICE_ADMIN]
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: "design-2_ruler-pencil",
-    component: Typography,
-    layout: "/admin",
-    roles: [roles.HEAD_OFFICE_ADMIN, roles.BRANCH_ADMIN]
   }
 ];
 
