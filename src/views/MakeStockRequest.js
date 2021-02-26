@@ -4,7 +4,7 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV, USER_KEY} from "../variables/constants";
+import {SERVER_URL, USER_KEY} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect, InputNumber} from "../variables/input";
@@ -15,9 +15,9 @@ import Memory from "../variables/memory";
 class MakeStockRequest extends React.Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
-        branchesUrl: SERVER_URL_DEV.concat(`/branch`),
-        stockRequestsUrl: SERVER_URL_DEV.concat(`/stock-request`),
-        productsUrl: SERVER_URL_DEV.concat(`/product`),
+        branchesUrl: SERVER_URL.concat(`/branch`),
+        stockRequestsUrl: SERVER_URL.concat(`/stock-request`),
+        productsUrl: SERVER_URL.concat(`/product`),
         stockRequestErrors: {
             byBranchId: '',
             forBranchId: '',

@@ -4,7 +4,7 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV, USER_KEY, USER_ROLES} from "../variables/constants";
+import {SERVER_URL, USER_KEY, USER_ROLES} from "../variables/constants";
 import {Button, Modal} from "react-bootstrap";
 import {InputSelect} from "../variables/input";
 import INTERCEPTOR from "variables/global/interceptor";
@@ -15,8 +15,8 @@ import Functions from "../variables/functions";
 class StockRequest extends React.Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
-        stockRequestsUrl: SERVER_URL_DEV.concat(`/stock-request`),
-        branchesUrl: SERVER_URL_DEV.concat(`/branch`),
+        stockRequestsUrl: SERVER_URL.concat(`/stock-request`),
+        branchesUrl: SERVER_URL.concat(`/branch`),
         stockRequestsTable: {
             columns: [
                 {

@@ -4,7 +4,7 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV} from "../variables/constants";
+import {SERVER_URL} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect} from "../variables/input";
@@ -14,7 +14,7 @@ import INTERCEPTOR from "variables/global/interceptor";
 class Products extends React.Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
-        productsUrl: SERVER_URL_DEV.concat(`/product`),
+        productsUrl: SERVER_URL.concat(`/product`),
         addModalOpen: false,
         updateModalOpen: false,
         addProduct: {

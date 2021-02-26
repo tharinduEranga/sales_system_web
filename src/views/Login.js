@@ -5,14 +5,14 @@ import Joi from "joi-browser";
 import axios from "axios";
 import Functions from "../variables/functions";
 import INTERCEPTOR from "../variables/global/interceptor";
-import {SERVER_URL_DEV, USER_KEY} from "../variables/constants";
+import {SERVER_URL, USER_KEY} from "../variables/constants";
 import {dashRoutes, internalRoutes} from "../routes";
 import Memory from "../variables/memory";
 
 class Login extends Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
-        loginUrl: SERVER_URL_DEV.concat(`/user/auth`),
+        loginUrl: SERVER_URL.concat(`/user/auth`),
         loginData: {
             username: '',
             password: ''

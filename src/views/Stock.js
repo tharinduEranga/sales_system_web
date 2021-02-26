@@ -4,7 +4,7 @@ import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import {Card, CardBody, CardHeader, CardTitle, Col, Form, Row} from "reactstrap";
 import {MDBBtn, MDBDataTableV5} from 'mdbreact';
 import axios from "axios";
-import {SERVER_URL_DEV, USER_KEY, USER_ROLES} from "../variables/constants";
+import {SERVER_URL, USER_KEY, USER_ROLES} from "../variables/constants";
 import Functions from "../variables/functions";
 import {Button, Modal} from "react-bootstrap";
 import {InputText, InputSelect, InputNumber} from "../variables/input";
@@ -15,9 +15,9 @@ import Memory from "../variables/memory";
 class Stock extends React.Component {
     state = {
         interceptor: INTERCEPTOR, // added this line to avoid unused import warning for INTERCEPTOR
-        stocksUrl: SERVER_URL_DEV.concat(`/stock`),
-        branchesUrl: SERVER_URL_DEV.concat(`/branch`),
-        productsUrl: SERVER_URL_DEV.concat(`/product`),
+        stocksUrl: SERVER_URL.concat(`/stock`),
+        branchesUrl: SERVER_URL.concat(`/branch`),
+        productsUrl: SERVER_URL.concat(`/product`),
         addModalOpen: false,
         updateModalOpen: false,
         addStock: {
